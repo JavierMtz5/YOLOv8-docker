@@ -10,17 +10,11 @@ import ultralytics.engine.results
 
 __version__ = "0.0.3"
 
-BASE_DIR = Path(__file__).resolve(strict=True).parent
-INFERENCE_DIR = os.path.join(BASE_DIR, 'inference')
-# TODO: Get from envar
-model_weights_filename = 'coco_detector.pt'
-MODEL_PATH = os.path.join(BASE_DIR, 'model_weights', model_weights_filename)
-
-model = ultralytics.YOLO(MODEL_PATH)
+model = ultralytics.YOLO(os.environ.get('YOLOV8_MODEL_DIR'))
 
 def inference_on_path(imgs_path: str) -> List[Dict[str, Any]]:
     """Performs inference on the trained model for the YOLOv8 architecture"""
-    results: ultralytics.engine.results.Results = model(source=imgs_path, show=False, save=True, conf=0.45)
+    results: ultralytics.engine.results.Results = model(source=imgs_path, show=False, conf=0.45)
     json_results = []
     for result in results:
         result_metadata = {

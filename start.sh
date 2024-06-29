@@ -4,11 +4,11 @@
 IMAGE_NAME="ml_app"
 IMAGE_TAG="0.0.3"
 FULL_IMAGE_NAME="${IMAGE_NAME}:${IMAGE_TAG}"
-WORKING_DIR="/usr/src/ultralytics"
+WORKING_DIR="/home/app"
 LOCAL_INFERENCE_RESULTS_DIR="/home/jmartinez/ml_app/results"
 LOCAL_DATA_DIR="/home/jmartinez/ml_app/data"
 DOCKER_INFERENCE_RESULTS_DIR="${WORKING_DIR}/runs"
-DOCKER_DATA_DIR="${WORKING_DIR}/code/data"
+DOCKER_DATA_DIR="${WORKING_DIR}/data"
 
 # Stop and remove any previous containers running from the given image
 echo "Stopping and removing any existing containers for the image ${FULL_IMAGE_NAME}..."

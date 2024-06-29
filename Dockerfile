@@ -8,6 +8,5 @@ RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
 # Copy the model and the training/test data
 COPY ./app ${APP_HOME}/code/app
-COPY ./data ${APP_HOME}/code/data
 
 CMD ["fastapi", "run", "code/app/main.py", "--port", "8080"]

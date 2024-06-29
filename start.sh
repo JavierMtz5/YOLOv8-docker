@@ -4,8 +4,11 @@
 IMAGE_NAME="ml_app"
 IMAGE_TAG="0.0.3"
 FULL_IMAGE_NAME="${IMAGE_NAME}:${IMAGE_TAG}"
+WORKING_DIR="/usr/src/ultralytics"
 LOCAL_INFERENCE_RESULTS_DIR="/home/jmartinez/ml_app/results"
-DOCKER_INFERENCE_RESULTS_DIR="/usr/src/ultralytics/runs"
+LOCAL_DATA_DIR="/home/jmartinez/ml_app/data"
+DOCKER_INFERENCE_RESULTS_DIR="${WORKING_DIR}/runs"
+DOCKER_DATA_DIR="${WORKING_DIR}/code/data"
 
 # Stop and remove any previous containers running from the given image
 echo "Stopping and removing any existing containers for the image ${FULL_IMAGE_NAME}..."
@@ -36,6 +39,6 @@ docker build -t ${FULL_IMAGE_NAME} .
 
 # Run the docker image
 echo "Running the Docker image ${FULL_IMAGE_NAME}..."
-docker run -d --ipc=host --gpus all -p 8080:8080 -v $LOCAL_INFERENCE_RESULTS_DIR:$DOCKER_INFERENCE_RESULTS_DIR ${FULL_IMAGE_NAME}
+docker run -d --ipc=host --gpus all -p 8080:8080 -v $LOCAL_INFERENCE_RESULTS_DIR:$DOCKER_INFERENCE_RESULTS_DIR -v $LOCAL_DATA_DIR:$DOCKER_DATA_DIR ${FULL_IMAGE_NAME}
 
 echo "Docker container is up and running."

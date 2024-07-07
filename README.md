@@ -119,7 +119,7 @@ print(response.json())
 
 #### POST /detect_img
 
-This endpoint **receives as payload the image on which inference should be applied**. This endpoint should not be used for batch inference, as the image is sent through the network before performing inference, causing high inference time per image.
+This endpoint **receives as payload the image on which inference should be applied**. This endpoint should not be used for batch inference, as the image is sent through the network before performing inference, leading to high API response times, and thus to lower classification frequencies..
 
 ```python
 import requests
@@ -135,9 +135,9 @@ print(response.json())
 
 ```
 
-### Get the images inside the Docker container available for inference
+# Get Images
 
-As explained for the **/detect** endpoint, the query parameter must be the docker conatiner path to the directory which contains the images. Therefore, it is useful to provide a getter endpoint, which returns the available image files in a given directory.
+As explained for the **/detect** endpoint, the query parameter must be the docker container path to the directory which contains the images. Therefore, it is useful to provide a getter endpoint, which returns the available image files in a given directory.
 
 #### GET /images
 

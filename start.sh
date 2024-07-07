@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# Variables
-IMAGE_NAME="ml_app"
-IMAGE_TAG="0.0.3"
+# Configuration values
+IMAGE_NAME="yolov8_docker"  # Set the docker image name
+IMAGE_TAG="1.0.0"           # Set the docker image tag
 FULL_IMAGE_NAME="${IMAGE_NAME}:${IMAGE_TAG}"
 WORKING_DIR="/home/app"
-LOCAL_INFERENCE_RESULTS_DIR="/home/jmartinez/ml_app/results"
-LOCAL_DATA_DIR="/home/jmartinez/ml_app/data"
+LOCAL_INFERENCE_RESULTS_DIR="/path/to/local/inference/results"  # Set the local inference results directory
+LOCAL_DATA_DIR="/path/to/local/data"                            # Set the local data directory
 DOCKER_INFERENCE_RESULTS_DIR="${WORKING_DIR}/runs"
 DOCKER_DATA_DIR="${WORKING_DIR}/data"
 

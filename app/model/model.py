@@ -1,4 +1,3 @@
-import os
 from typing import Dict, List, Any
 import json
 from PIL import Image
@@ -7,9 +6,9 @@ import ultralytics
 import ultralytics.engine
 import ultralytics.engine.results
 
-__version__ = "0.0.3"
+__version__ = "1.0.0"
 
-model = ultralytics.YOLO(os.environ.get('YOLOV8_MODEL_DIR'))
+model = ultralytics.YOLO('yolov8m.pt')
 
 def inference_on_path(imgs_path: str) -> List[Dict[str, Any]]:
     """

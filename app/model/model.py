@@ -12,8 +12,7 @@ model = ultralytics.YOLO('yolov8m.pt')
 
 def inference_on_path(imgs_path: str) -> List[Dict[str, Any]]:
     """
-    Performs inference on the trained model for the YOLOv8 architecture 
-    on the images available in the given path
+    Runs inference on the YOLOv8 architecture for the images available in the given path
     """
     results: ultralytics.engine.results.Results = model(source=imgs_path, show=False, conf=0.45)
     results_data = []
@@ -29,12 +28,9 @@ def inference_on_path(imgs_path: str) -> List[Dict[str, Any]]:
 
 def inference_on_img(img: Image) -> List[Dict[str, Any]]:
     """
-    Performs inference on the trained model for the YOLOv8 architecture 
-    on the given image
+    Runs inference on the YOLOv8 architecture for the given image
     """
     results: ultralytics.engine.results.Results = model(source=img, show=False, conf=0.45)
-    result_data = []
-    for result in results:
-        result_data = json.loads(result.tojson())
+    result_data = json.loads(results[0].tojson())
 
     return result_data

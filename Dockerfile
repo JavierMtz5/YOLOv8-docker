@@ -9,7 +9,7 @@ WORKDIR ${APP_HOME}
 COPY ./requirements.txt ${APP_HOME}/requirements.txt
 RUN pip install --no-cache-dir --upgrade -r ${APP_HOME}/requirements.txt
 
-# Copy the model and the training/test data
+# Copy the app directory
 COPY ./app ${APP_HOME}/app
 
 CMD ["fastapi", "run", "app/main.py", "--port", "8080"]

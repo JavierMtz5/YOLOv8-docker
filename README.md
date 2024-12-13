@@ -143,6 +143,17 @@ As explained for the **/detect** endpoint, the query parameter must be the docke
 
 This endpoint returns a list of all *JPG* or *PNG* files inside the docker directory received as query parameter. It is useful for checking which directory to apply inference to via the **/detect** endpoint.
 
+
+#### POST /detect_img_visual
+
+This endpoint **receives as payload the image on which inference should be applied**. The return of this api call is a PNG image showing the results of the inference as bounding boxes and labels.
+This endpoint should not be used for batch inference, as the image is sent through the network before performing inference, leading to high API response times, and thus to lower classification frequencies..
+
+
+#### GET /upload_form
+
+A simple HTML forms to serve as a GUI to upload an image from the client computer for testing/demo purpose.
+
 # YOLOv8 Model
 
 The YOLOv8 model running on the API backend is the YOLOv8m model, which provides a good balance between inference time and accuracy.

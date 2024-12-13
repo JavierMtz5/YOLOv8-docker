@@ -1,10 +1,11 @@
 """Main script for exposing the FastAPI API for YOLO inference"""
 import os
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 from io import BytesIO
 from typing import Dict, Any, Union
 
 from fastapi import FastAPI, Query, File, UploadFile
+from fastapi.responses import HTMLResponse, Response
 from app.model.model import inference_on_img, inference_on_path
 from app.model.model import __version__ as model_version
 
@@ -102,3 +103,76 @@ async def detect_img(
             'image_size': img.size,
             'inference_results': inference_results_data
     }}
+
+""" simple HTML forms to upload an image via GUI """
+@app.get("/upload_form", response_class=HTMLResponse, include_in_schema=False)
+async def root():
+    return '''<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<form action="/detect_img" name="form1" id="upload-image-form" method="POST" enctype="multipart/form-data">
+    <!-- Selector to choose either the /detect_img or /detect_img_visual endpoint -->
+    <select id="form_action" name="form_action" onchange="document.form1.action = this.value;">
+    <option value="/detect_img" selected="selected">Detect (JSON output)</option>
+    <option value="/detect_img_visual">Detect (PNG output)</option>
+    </select>
+    
+    <!-- Simple file input -->
+    <div class="form-group">
+        <label for="image">Upload Image:</label>
+        <input type="file" id="image" name="img" accept="image/png, image/jpeg, image/gif">
+    </div>
+
+    <button type="submit" >Submit</button>
+</form>
+</body>
+</html>'''
+
+""" drawing the result of the inference on the image then return it (for visual inspection) """
+@app.post('/detect_img_visual', responses = {
+        200: {
+            "content": {"image/png": {}}
+        }
+    },response_class=Response)
+async def mirror_img(
+    img: UploadFile = File(...)
+) -> Dict[str, Union[int, Dict[str, Any]]]:
+    """Performs YOLO inference on the received image"""
+    if not img:
+        return {
+            'status_code': 400, 
+            'data': {
+                'message': 'No upload file sent'
+        }}
+
+    # Load the received image as PIL Image
+    img_content = await img.read()
+    image_stream = BytesIO(img_content)
+    image = Image.open(image_stream)
+
+    # Perform inference for the received image
+    try:
+        inference_results_data = inference_on_img(img=image)
+    except Exception as err:
+        print(f'An error occurred while trying to perform inference. {err}')
+        return {
+            'status_code': 500,
+            'data': {}
+        }
+
+    # ImageDraw allow to draw rectangle and text on the image
+    draw = ImageDraw.Draw(image)
+    font = ImageFont.load_default(20)
+    # For each result, draw the bounding box and write the class name and confidence
+    for result in inference_results_data:
+        draw.rectangle(list(result['box'].values()),outline="green")
+        draw.text(xy=[result['box']['x1'],result['box']['y1'] +30], text="{} ({:.1f})".format(result['name'], 100*result['confidence']), font=font, fill="green" )
+
+    # Generate the output as a bytes stream of an PNG image.
+    output_stream = BytesIO()
+    image.save(output_stream, 'PNG')
+
+    return Response (content=output_stream.getvalue(), media_type="image/png")
